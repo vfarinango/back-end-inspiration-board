@@ -46,3 +46,24 @@ def delete_board(board_id):
     db.session.delete(board)
     db.session.commit()
     return {"details": f"Board {board_id} deleted"}, 200
+
+# List all cards for a board
+@bp.get("/<board_id>/cards")
+def get_cards_for_board(board_id):
+    board = validate_model(Board, board_id)
+    cards = [card.to_dict() for card in board.cards]
+    return cards, 200
+
+# Create a new card for a board
+@bp.post("/<board_id>/cards")
+def create_card_for_board(board_id):
+    board = validate_model(Board, board_id)
+    data = request.get_json()
+    new_card = Card(
+        message=data["message"],
+        likes_count=data["likes_count"],
+        board_id=board.board_id
+    )
+    db.session.add(new_card)
+    db.session.commit()
+    return new_card.to_dict(), 201
