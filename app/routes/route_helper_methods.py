@@ -36,3 +36,4 @@ def create_model_response(cls, data):
     new_instance = create_model_instance(cls, data)
     key = cls.__name__.lower()
     return {key: new_instance.to_dict()}, 201
+    # return new_instance.to_dict(), 201 # I added
