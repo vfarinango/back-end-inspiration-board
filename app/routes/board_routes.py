@@ -1,25 +1,24 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request
 from ..models.board import Board
 from ..models.card import Card
 from ..db import db
-from .route_helper_methods import validate_model
+from .route_helper_methods import validate_model, create_model_response 
 
-bp = Blueprint("boards_bp", __name__, url_prefix="/boards")
+bp = Blueprint("board_bp", __name__, url_prefix="/boards") 
 
 # GET /boards - list all boards
 @bp.get("")
 def get_boards():
-    boards = Board.query.all()
-    return [board.to_dict() for board in boards], 200
+    query = db.select(Board)
+    boards = db.session.scalars(query.order_by(Board.board_id))
+    boards_response = [board.to_dict() for board in boards]
+    return boards_response
 
 # POST /boards - create a new board
 @bp.post("")
 def create_board():
-    data = request.get_json()
-    new_board = Board.from_dict(data)
-    db.session.add(new_board)
-    db.session.commit()
-    return new_board.to_dict(), 201
+    request_body = request.get_json()
+    return create_model_response(Board, request_body) 
 
 # GET /boards/<board_id> - get one board by ID
 @bp.get("/<board_id>")
@@ -32,10 +31,7 @@ def get_board(board_id):
 def update_board(board_id):
     board = validate_model(Board, board_id)
     data = request.get_json()
-    if "title" in data:
-        board.title = data["title"]
-    if "owner" in data:
-        board.owner = data["owner"]
+    board.update(data) 
     db.session.commit()
     return board.to_dict(), 200
 

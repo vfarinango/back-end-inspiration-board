@@ -1,12 +1,13 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from ..db import db
+from typing import TYPE_CHECKING  
+if TYPE_CHECKING: from .card import Card 
 
 class Board(db.Model):
     board_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     title: Mapped[str]
     owner: Mapped[str]
-    cards: Mapped[list["Card"]] = relationship(back_populates="board", cascade="all, delete-orphan")
-
+    cards: Mapped[list["Card"]] = relationship(back_populates="board", cascade="all, delete-orphan") 
 
     @classmethod
     def from_dict(cls, board_data):
@@ -22,6 +23,8 @@ class Board(db.Model):
             "owner": self.owner
         }
 
-    # def update(self, data):
-    #     if "title" in data:
-    #         self.title = data["title"]
+    def update(self, data):
+        if "title" in data:
+            self.title = data["title"]
+        if "owner" in data:
+            self.owner = data["owner"]
