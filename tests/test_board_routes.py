@@ -1,5 +1,4 @@
 import pytest
-from app.models.board import Board
 
 def test_create_one_board(client):
     # Act

@@ -7,7 +7,6 @@ def validate_model(cls, model_id):
     except ValueError:
         response = {"details": f"{cls.__name__} id {model_id} is invalid"}
         abort(make_response(response, 400))
-    # Automatically finds the PK column name
     pk_column = cls.__mapper__.primary_key[0]
     query = db.select(cls).where(pk_column == model_id)
     model = db.session.scalar(query)
@@ -36,4 +35,3 @@ def create_model_response(cls, data):
     new_instance = create_model_instance(cls, data)
     key = cls.__name__.lower()
     return {key: new_instance.to_dict()}, 201
-    # return new_instance.to_dict(), 201 # I added
