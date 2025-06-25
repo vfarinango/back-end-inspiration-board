@@ -6,9 +6,7 @@ from app.models.card import Card
 
 @pytest.fixture
 def app():
-    # Create a fresh app for testing
     app = create_app({"TESTING": True, "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:"})
-
     with app.app_context():
         db.create_all()
         yield app
@@ -18,9 +16,16 @@ def app():
 def client(app):
     return app.test_client()
 
+@pytest.fixture(autouse=True)
+def clean_db(app):
+    with app.app_context():
+        db.session.remove()
+        for table in reversed(db.metadata.sorted_tables):
+            db.session.execute(table.delete())
+        db.session.commit()
+
 @pytest.fixture
 def one_saved_board():
-
     board = Board(title="Test Board", owner="Tester")
     db.session.add(board)
     db.session.commit()

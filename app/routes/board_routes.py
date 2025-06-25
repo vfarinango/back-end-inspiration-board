@@ -12,7 +12,7 @@ def get_boards():
     query = db.select(Board)
     boards = db.session.scalars(query.order_by(Board.board_id))
     boards_response = [board.to_dict() for board in boards]
-    return boards_response
+    return boards_response, 200
 
 # POST /boards - create a new board
 @bp.post("")
