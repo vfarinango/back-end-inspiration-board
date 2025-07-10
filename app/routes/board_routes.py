@@ -56,7 +56,7 @@ def create_card_for_board(board_id):
     data = request.get_json()
     new_card = Card(
         message=data["message"],
-        likes_count=data["likes_count"],
+        likes_count=data.get("likes_count", 0),
         board_id=board.board_id
     )
     db.session.add(new_card)

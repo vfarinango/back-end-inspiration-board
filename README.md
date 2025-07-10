@@ -28,10 +28,10 @@ This file lists the dependencies we anticipate are needed for the project.
 
 This is a hidden file which lists specific files and file extension types that should be ignored by the git repo when looking for changed files to stage.
 
-## Database name: inspiration_board
+## `Database name: inspiration_board`
 
-Table name: board
-Columns:
+#Table name: board
+##Columns:
 
 board_id, int, primary key
 title, string
@@ -144,6 +144,3 @@ patch
 put
 {"message": "Updated!", "likes_count": 2}
 {"card_id": 2, "message": "Updated!", "likes_count": 2, "board_id": 1}
-
-
-
